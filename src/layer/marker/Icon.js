@@ -90,11 +90,11 @@ export class Icon extends Class {
 		setOptions(this, options);
 	}
 
-	// @method createIcon(oldIcon?: HTMLElement): HTMLElement
+	// @method createIcon(oldIcon?: HTMLElement, hasKeyboard?: Boolean): HTMLElement
 	// Called internally when the icon has to be shown, returns a `<img>` HTML element
 	// styled according to the options.
-	createIcon(oldIcon) {
-		return this._createIcon('icon', oldIcon);
+	createIcon(oldIcon, hasKeyboard) {
+		return this._createIcon('icon', oldIcon, hasKeyboard);
 	}
 
 	// @method createShadow(oldIcon?: HTMLElement): HTMLElement
@@ -103,7 +103,7 @@ export class Icon extends Class {
 		return this._createIcon('shadow', oldIcon);
 	}
 
-	_createIcon(name, oldIcon) {
+	_createIcon(name, oldIcon, hasKeyboard) {
 		const src = this._getIconUrl(name);
 
 		if (!src) {
@@ -113,7 +113,7 @@ export class Icon extends Class {
 			return null;
 		}
 
-		const img = this._createImg(src, oldIcon && oldIcon.tagName === 'IMG' ? oldIcon : null);
+		const img = this._createImg(src, oldIcon && oldIcon.tagName === 'IMG' ? oldIcon : null, hasKeyboard);
 		this._setIconStyles(img, name);
 
 		if (this.options.crossOrigin || this.options.crossOrigin === '') {
@@ -149,8 +149,12 @@ export class Icon extends Class {
 		}
 	}
 
-	_createImg(src, el) {
-		el ??= document.createElement('img');
+	_createImg(src, el, hasKeyboard) {
+		// Fix keyboard accessibility of interactive markers.
+		el ??= document.createElement(hasKeyboard ? 'input' : 'img');
+		if (hasKeyboard) {
+			el.type = 'image';
+		}
 		el.src = src;
 		return el;
 	}

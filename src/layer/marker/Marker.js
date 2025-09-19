@@ -218,7 +218,7 @@ export class Marker extends Layer {
 		const options = this.options,
 		classToAdd = `leaflet-zoom-${this._zoomAnimated ? 'animated' : 'hide'}`;
 
-		const icon = options.icon.createIcon(this._icon);
+		const icon = options.icon.createIcon(this._icon, options.keyboard);
 		let addIcon = false;
 
 		// if we're not reusing the icon, remove the old one and init new one
@@ -232,17 +232,14 @@ export class Marker extends Layer {
 				icon.title = options.title;
 			}
 
-			if (icon.tagName === 'IMG') {
+			if (icon.tagName === 'IMG' || icon.tagName === 'INPUT') {
 				icon.alt = options.alt ?? '';
 			}
 		}
 
 		icon.classList.add(classToAdd);
 
-		if (options.keyboard) {
-			icon.tabIndex = '0';
-			icon.setAttribute('role', 'button');
-		}
+		// (tabindex=0 and role=button are no longer required.)
 
 		this._icon = icon;
 
