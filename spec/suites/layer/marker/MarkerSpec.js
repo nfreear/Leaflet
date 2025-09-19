@@ -350,4 +350,20 @@ describe('Marker', () => {
 			UIEventSimulator.fire('pointermove', marker._icon);
 		});
 	});
+
+	describe('element name', () => {
+		// Keyboard accessibility (#9898).
+		it('interactive markers use INPUT', () => {
+			const marker = new Marker([55.8, 37.6]);
+			const icon = marker._icon;
+			expect(icon.tagName).to.equal('INPUT');
+			expect(icon.type).to.equal('image');
+		});
+
+		it('non-interactive markers use IMG', () => {
+			const marker = new Marker([55.8, 37.6], { keyboard: false });
+			const icon = marker._icon;
+			expect(icon.tagName).to.equal('IMG');
+		});
+	});
 });
