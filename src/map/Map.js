@@ -140,7 +140,19 @@ export class Map extends Evented {
 
 			// @option trackResize: Boolean = true
 			// Whether the map automatically handles browser window resize to update itself.
-			trackResize: true
+			trackResize: true,
+
+
+			// @section Accessibility Options
+			// @option containerRole: String = 'region'
+			// The accessible role of the map container element. The container is interactive and focusable, so it needs a role.
+			// Don't change this if you're not sure what it does.
+			containerRole: 'region',
+
+			// @option containerLabel: String = 'Map'
+			// The accessible name of the map container element. The container is interactive and focusable, so it needs a name.
+			// Don't change this if you're not sure what it does.
+			containerLabel: 'Map'
 		});
 	}
 
@@ -1111,6 +1123,14 @@ export class Map extends Evented {
 		this._containerId = Util.stamp(container);
 
 		PointerEvents.enablePointerDetection();
+
+		if (!container.hasAttribute('role')) {
+			container.setAttribute('role', this.options.containerRole);
+		}
+
+		if (!container.hasAttribute('aria-label')) {
+			container.setAttribute('aria-label', this.options.containerLabel);
+		}
 	}
 
 	_initLayout() {
